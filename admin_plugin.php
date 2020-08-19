@@ -126,7 +126,7 @@ class admin_plugin extends ecjia_admin
         $this->assign('form_action', RC_Uri::url('sms/admin_plugin/update'));
 
         $channel_code = !empty($_GET['code']) ? trim($_GET['code']) : '';
-        $channel_info = RC_DB::table('notification_channels')->where('channel_code', $channel_code)->first();
+        $channel_info = RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_code', $channel_code)->first();
 
         /* 取得配置信息 */
         if (is_string($channel_info['channel_config'])) {
@@ -164,7 +164,7 @@ class admin_plugin extends ecjia_admin
             return $this->showmessage(__('请输入短信渠道名称', 'sms'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
-        $count = RC_DB::table('notification_channels')->where('channel_name', $name)->where('channel_code', '!=', $code)->where('channel_type', $type)->count();
+        $count = RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_name', $name)->where('channel_code', '!=', $code)->where('channel_type', $type)->count();
         if ($count > 0) {
             return $this->showmessage(__('该短信渠道名称已存在', 'sms'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
@@ -189,13 +189,13 @@ class admin_plugin extends ecjia_admin
                 'channel_desc'   => trim($_POST['channel_desc']),
                 'channel_config' => $config,
             );
-            RC_DB::table('notification_channels')->where('channel_code', $code)->update($array);
+            RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_code', $code)->update($array);
 
             /* 记录日志 */
             ecjia_admin::admin_log($name, 'edit', 'sms_channel');
             return $this->showmessage(__('编辑成功', 'sms'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
         } else {
-            $count = RC_DB::table('notification_channels')->where('channel_code', $code)->where('channel_type', $type)->count();
+            $count = RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_code', $code)->where('channel_type', $type)->count();
             if ($count > 0) {
                 /* 该渠道已经安装过, 将该渠道的状态设置为 enable */
                 $data = array(
@@ -204,7 +204,7 @@ class admin_plugin extends ecjia_admin
                     'channel_config' => $config,
                     'enabled'        => '1',
                 );
-                RC_DB::table('notification_channels')->where('channel_code', $code)->update($data);
+                RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_code', $code)->update($data);
             } else {
                 /* 该渠道没有安装过, 将该渠道的信息添加到数据库 */
                 $data = array(
@@ -214,7 +214,7 @@ class admin_plugin extends ecjia_admin
                     'channel_config' => $config,
                     'enabled'        => '1',
                 );
-                RC_DB::table('notification_channels')->insertGetId($data);
+                RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->insertGetId($data);
             }
 
             /* 记录日志 */
@@ -238,8 +238,8 @@ class admin_plugin extends ecjia_admin
             'enabled' => $enabled,
         );
 
-        RC_DB::table('notification_channels')->where('channel_code', $code)->update($data);
-        $channel_info = RC_DB::table('notification_channels')->where('channel_code', $code)->first();
+        RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_code', $code)->update($data);
+        $channel_info = RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_code', $code)->first();
 
         if ($enabled == 1) {
             $action  = 'use';
@@ -270,10 +270,10 @@ class admin_plugin extends ecjia_admin
             return $this->showmessage(__('请输入短信渠道名称', 'sms'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         } else {
             /* 检查名称是否重复 */
-            if (RC_DB::table('notification_channels')->where('channel_name', $channel_name)->where('channel_id', '!=', $channel_id)->where('channel_type', $type)->count() > 0) {
+            if (RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_name', $channel_name)->where('channel_id', '!=', $channel_id)->where('channel_type', $type)->count() > 0) {
                 return $this->showmessage(__('该短信渠道名称已存在', 'sms'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             } else {
-                RC_DB::table('notification_channels')->where('channel_id', $channel_id)->update(array('channel_name' => stripcslashes($channel_name)));
+                RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_id', $channel_id)->update(array('channel_name' => stripcslashes($channel_name)));
 
                 ecjia_admin::admin_log(stripcslashes($channel_name), 'edit', 'sms_channel');
                 return $this->showmessage(__('编辑成功', 'sms'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
@@ -295,9 +295,9 @@ class admin_plugin extends ecjia_admin
             $channel_id   = intval($_POST['pk']);
             $channel_sort = intval($_POST['value']);
 
-            RC_DB::table('notification_channels')->where('channel_id', $channel_id)->update(array('sort_order' => $channel_sort));
+            RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_id', $channel_id)->update(array('sort_order' => $channel_sort));
 
-            $channel_info = RC_DB::table('notification_channels')->where('channel_id', $channel_id)->first();
+            $channel_info = RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_id', $channel_id)->first();
 
             ecjia_admin::admin_log(stripcslashes($channel_info['channel_name']) . '，'.__('排序值为', 'sms') . $channel_sort, 'edit', 'sms_channel_sort');
             return $this->showmessage(__('编辑成功', 'sms'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('sms/admin_plugin/init')));
@@ -311,7 +311,7 @@ class admin_plugin extends ecjia_admin
     {
         $type = !empty($_GET['type']) ? trim($_GET['type']) : 'sms';
 
-        $db_channel = RC_DB::table('notification_channels');
+        $db_channel = RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels');
         if (!empty($type)) {
             $db_channel->where('channel_type', $type);
         }

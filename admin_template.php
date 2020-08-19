@@ -95,7 +95,7 @@ class admin_template extends ecjia_admin
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('短信模板', 'sms')));
         $this->assign('ur_here', __('短信模板列表', 'sms'));
 
-        $data = RC_DB::table('notification_channels')->where('channel_type', 'sms')->orderby('sort_order', 'asc')->get();
+        $data = RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_type', 'sms')->orderby('sort_order', 'asc')->get();
         $this->assign('data', $data);
 
         $channel_code = $_GET['channel_code'];

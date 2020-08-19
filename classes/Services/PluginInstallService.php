@@ -91,7 +91,7 @@ class PluginInstallService
             }
 
             /* 检测名称重复 */
-            $name_count = RC_DB::table('notification_channels')->where('channel_name', $format_name)->where('channel_code', $options['config']['sms_code'])->count();
+            $name_count = RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_name', $format_name)->where('channel_code', $options['config']['sms_code'])->count();
             if ($name_count > 0) {
                 return ecjia_plugin::add_error('plugin_install_error', __('安装的插件已存在', 'sms'));
             }
@@ -104,7 +104,7 @@ class PluginInstallService
             \Ecjia\App\Sms\Helper::assign_adminlog_content();
 
             /* 安装，检查该短信插件是否曾经安装过 */
-            $count = RC_DB::table('notification_channels')->where('channel_code', $options['config']['sms_code'])->count();
+            $count = RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_code', $options['config']['sms_code'])->count();
 
             if ($count > 0) {
                 /* 该短信插件已经安装过, 将该短信插件的状态设置为 enable */
@@ -117,7 +117,7 @@ class PluginInstallService
                     'enabled'        => 1,
                 );
 
-                RC_DB::table('notification_channels')->where('channel_code', $options['config']['sms_code'])->update($data);
+                RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_code', $options['config']['sms_code'])->update($data);
             } else {
                 /* 该短信插件没有安装过, 将该短信插件的信息添加到数据库 */
                 $data = array(
@@ -128,7 +128,7 @@ class PluginInstallService
                     'channel_config' => $config,
                     'enabled'        => 1,
                 );
-                RC_DB::table('notification_channels')->insert($data);
+                RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->insert($data);
             }
 
             /* 记录日志 */
