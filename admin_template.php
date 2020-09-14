@@ -57,7 +57,7 @@ class admin_template extends ecjia_admin
     {
         parent::__construct();
 
-        Ecjia\App\Sms\Helper::assign_adminlog_content();
+        \Ecjia\App\Sms\Helper::assign_adminlog_content();
 
         RC_Script::enqueue_script('tinymce');
         RC_Style::enqueue_style('chosen');
@@ -155,7 +155,7 @@ class admin_template extends ecjia_admin
         $channel_code = trim($_GET['channel_code']);
         $this->assign('channel_code', $channel_code);
 
-        $handle = with(new Ecjia\App\Sms\SmsPlugin)->channel($channel_code);
+        $handle = with(new \Ecjia\App\Sms\SmsPlugin)->channel($channel_code);
         if ($handle->requiredTemplateId()) {
             $this->assign('templateid', 'templateid');
         }
@@ -175,7 +175,7 @@ class admin_template extends ecjia_admin
         $filter       = $_POST['JSON'];
         $code         = trim($filter['code']);
         $channel_code = trim($filter['channel_code']);
-        $event        = with(new Ecjia\App\Sms\EventFactory)->event($code);
+        $event        = with(new \Ecjia\App\Sms\EventFactory)->event($code);
 
         $desc        = [];
         $getValueHit = $event->getValueHit();
@@ -276,7 +276,7 @@ class admin_template extends ecjia_admin
         $channel_code = trim($_GET['channel_code']);
         $this->assign('channel_code', $channel_code);
 
-        $handle = with(new Ecjia\App\Sms\SmsPlugin)->channel($channel_code);
+        $handle = with(new \Ecjia\App\Sms\SmsPlugin)->channel($channel_code);
         if ($handle->requiredTemplateId()) {
             $this->assign('templateid', 'templateid');
         }
@@ -285,7 +285,7 @@ class admin_template extends ecjia_admin
         }
 
         $event_code = trim($_GET['event_code']);
-        $event      = with(new Ecjia\App\Sms\EventFactory)->event($event_code);
+        $event      = with(new \Ecjia\App\Sms\EventFactory)->event($event_code);
 
         $desc        = [];
         $getValueHit = $event->getValueHit();
@@ -418,7 +418,7 @@ class admin_template extends ecjia_admin
 
         $template_code_list = array();
 
-        $factory = new Ecjia\App\Sms\EventFactory();
+        $factory = new \Ecjia\App\Sms\EventFactory();
 
         $events = $factory->getEvents();
         foreach ($events as $event) {

@@ -57,7 +57,7 @@ class admin_events extends ecjia_admin
     {
         parent::__construct();
 
-        Ecjia\App\Sms\Helper::assign_adminlog_content();
+        \Ecjia\App\Sms\Helper::assign_adminlog_content();
 
         RC_Script::enqueue_script('tinymce');
         RC_Style::enqueue_style('chosen');
@@ -148,7 +148,7 @@ class admin_events extends ecjia_admin
 
         $template_code_list = array();
 
-        $factory = new Ecjia\App\Sms\EventFactory();
+        $factory = new \Ecjia\App\Sms\EventFactory();
         $events  = $factory->getEvents();
         foreach ($events as $k => $event) {
             $template_code_list[$k]['code']        = $event->getCode();
