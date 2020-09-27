@@ -130,7 +130,7 @@ class admin_template extends ecjia_admin
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('添加短信模板', 'sms')));
         ecjia_screen::get_current_screen()->add_help_tab(array(
             'id'      => 'overview',
-            'title'   => get('sms::sms.overview'),
+            'title'   => __('概述', 'sms'),
             'content' => '<p>' . __('欢迎访问ECJia智能后台添加短信模板页面，可以在此添加短信模板。', 'sms') . '</p>',
         ));
         ecjia_screen::get_current_screen()->set_help_sidebar(
