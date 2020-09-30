@@ -57,8 +57,6 @@ class admin_template extends ecjia_admin
     {
         parent::__construct();
 
-        \Ecjia\App\Sms\Helper::assign_adminlog_content();
-
         RC_Script::enqueue_script('tinymce');
         RC_Style::enqueue_style('chosen');
         RC_Style::enqueue_style('uniform-aristo');

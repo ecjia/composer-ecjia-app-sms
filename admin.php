@@ -56,8 +56,6 @@ class admin extends ecjia_admin
     {
         parent::__construct();
 
-        \Ecjia\App\Sms\Helper::assign_adminlog_content();
-
         /* 加载全局 js/css */
         RC_Script::enqueue_script('jquery-validate');
         RC_Script::enqueue_script('jquery-form');

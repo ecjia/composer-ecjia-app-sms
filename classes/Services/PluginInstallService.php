@@ -101,8 +101,6 @@ class PluginInstallService
             $config_file = $options['config'];
 
             //组织默认数据，将该短信的信息添加到数据库
-            \Ecjia\App\Sms\Helper::assign_adminlog_content();
-
             /* 安装，检查该短信插件是否曾经安装过 */
             $count = RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_code', $options['config']['sms_code'])->count();
 

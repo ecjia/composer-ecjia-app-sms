@@ -93,7 +93,6 @@ class PluginUninstallService
             /* 从数据库中删除短信插件 */
             RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_code', $options['config']['sms_code'])->delete();
 
-            \Ecjia\App\Sms\Helper::assign_adminlog_content();
             /* 记录日志 */
             ecjia_admin::admin_log($format_name, 'uninstall', 'sms');
 
