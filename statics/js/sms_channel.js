@@ -64,6 +64,7 @@
 	app.channel_edit = {
 		edit : function() {
 			app.channel_edit.submit();
+            app.channel_list.switch_state();
 		},
 		
 		/* 编辑form提交 */
