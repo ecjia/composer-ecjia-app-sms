@@ -44,13 +44,23 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-defined('IN_ECJIA') or exit('No permission resources.');
+namespace Ecjia\App\Sms\Controllers;
+
+use admin_nav_here;
+use ecjia;
+use ecjia_admin;
+use ecjia_config;
+use ecjia_screen;
+use RC_App;
+use RC_Script;
+use RC_Style;
+use RC_Uri;
 
 /**
  * ECJIA短信模块
  * @author songqian
  */
-class admin_config extends ecjia_admin
+class AdminConfigController extends AdminBase
 {
     public function __construct()
     {
@@ -63,7 +73,7 @@ class admin_config extends ecjia_admin
         RC_Style::enqueue_style('uniform-aristo');
         RC_Script::enqueue_script('jquery-uniform');
         RC_Script::enqueue_script('jquery-chosen');
-        RC_Script::enqueue_script('sms_config', RC_App::apps_url('statics/js/sms_config.js', __FILE__), array(), false, true);
+        RC_Script::enqueue_script('sms_config', RC_App::apps_url('statics/js/sms_config.js', $this->__FILE__), array(), false, true);
         RC_Script::localize_script('sms_config', 'js_lang_sms_config', config('app-sms::jslang.sms_config'));
     }
 

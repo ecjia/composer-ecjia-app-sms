@@ -44,13 +44,25 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-defined('IN_ECJIA') or exit('No permission resources.');
+namespace Ecjia\App\Sms\Controllers;
+
+use admin_nav_here;
+use ecjia;
+use ecjia_admin;
+use ecjia_page;
+use ecjia_screen;
+use RC_App;
+use RC_DB;
+use RC_Script;
+use RC_Style;
+use RC_Time;
+use RC_Uri;
 
 /**
  * ECJIA短信模块
  * @author songqian
  */
-class admin extends ecjia_admin
+class AdminController extends AdminBase
 {
     public function __construct()
     {
@@ -69,7 +81,7 @@ class admin extends ecjia_admin
         RC_Script::enqueue_script('bootstrap-datepicker', RC_Uri::admin_url('statics/lib/datepicker/bootstrap-datepicker.min.js'));
         RC_Style::enqueue_style('datepicker', RC_Uri::admin_url('statics/lib/datepicker/datepicker.css'));
 
-        RC_Script::enqueue_script('sms', RC_App::apps_url('statics/js/sms.js', __FILE__), array(), false, true);
+        RC_Script::enqueue_script('sms', RC_App::apps_url('statics/js/sms.js', $this->__FILE__), array(), false, true);
         RC_Script::localize_script('sms', 'js_lang_sms', config('app-sms::jslang.sms'));
 
         RC_Style::enqueue_style('hint.min', RC_Uri::admin_url('statics/lib/hint_css/hint.min.css'));
@@ -118,11 +130,12 @@ class admin extends ecjia_admin
         $smsid  = intval($_GET['id']);
         $result = \Ecjia\App\Sms\SmsManager::make()->resend($smsid);
         ecjia_admin::admin_log(sprintf(__('短信编号为%s的再次进行发送短信 ', 'sms'), $smsid), 'setup', 'sms_record');
+
         if (is_ecjia_error($result)) {
             return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR, array('pjaxurl' => RC_Uri::url('sms/admin/init')));
-        } else {
-            return $this->showmessage(__('发送成功！', 'sms'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('sms/admin/init')));
         }
+
+        return $this->showmessage(__('发送成功！', 'sms'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('sms/admin/init')));
     }
 
     /**
@@ -140,9 +153,9 @@ class admin extends ecjia_admin
 
         if (is_ecjia_error($result)) {
             return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR, array('pjaxurl' => RC_Uri::url('sms/admin/init')));
-        } else {
-            return $this->showmessage(__('已批量发送完毕', 'sms'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('sms/admin/init')));
         }
+
+        return $this->showmessage(__('已批量发送完毕', 'sms'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('sms/admin/init')));
     }
     
     /**

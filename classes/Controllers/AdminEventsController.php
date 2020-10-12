@@ -44,13 +44,23 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-defined('IN_ECJIA') or exit('No permission resources.');
+namespace Ecjia\App\Sms\Controllers;
+
+use admin_nav_here;
+use ecjia;
+use ecjia_admin;
+use ecjia_screen;
+use RC_App;
+use RC_DB;
+use RC_Script;
+use RC_Style;
+use RC_Uri;
 
 /**
  * ECJIA短信事件模块
  * @author songqian
  */
-class admin_events extends ecjia_admin
+class AdminEventsController extends AdminBase
 {
 
     public function __construct()
@@ -74,9 +84,9 @@ class admin_events extends ecjia_admin
         RC_Script::enqueue_script('bootstrap-placeholder');
         RC_Script::enqueue_script('jquery-dataTables-bootstrap');
 
-        RC_Script::enqueue_script('sms_events', RC_App::apps_url('statics/js/sms_events.js', __FILE__), array(), false, false);
+        RC_Script::enqueue_script('sms_events', RC_App::apps_url('statics/js/sms_events.js', $this->__FILE__), array(), false, false);
         RC_Script::localize_script('sms_events', 'js_lang_sms_events', config('app-sms::jslang.sms_events'));
-        RC_Script::enqueue_script('sms_template', RC_App::apps_url('statics/js/sms_template.js', __FILE__), array(), false, false);
+        RC_Script::enqueue_script('sms_template', RC_App::apps_url('statics/js/sms_template.js', $this->__FILE__), array(), false, false);
         RC_Script::localize_script('sms_template', 'js_lang_sms_template', config('app-sms::jslang.sms_template'));
 
     }
