@@ -47,10 +47,15 @@
 namespace Ecjia\App\Sms\Controllers;
 
 use admin_nav_here;
+use admin_notice;
 use ecjia;
+use Ecjia\App\Sms\Installer\PluginUninstaller;
+use Ecjia\Component\Plugin\Storages\SmsPluginStorage;
 use ecjia_admin;
 use ecjia_page;
 use ecjia_screen;
+use InvalidArgumentException;
+use RC_Api;
 use RC_App;
 use RC_DB;
 use RC_Script;
@@ -139,9 +144,9 @@ class AdminPluginController extends AdminBase
         $channel_info = RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_code', $channel_code)->first();
 
         /* 取得配置信息 */
-        if (is_string($channel_info['channel_config'])) {
-            $channel_config = unserialize($channel_info['channel_config']);
+        $channel_config = unserialize($channel_info['channel_config']);
 
+        try {
             /* 取出已经设置属性的code */
             $code_list = array();
             if (!empty($channel_config)) {
@@ -150,11 +155,37 @@ class AdminPluginController extends AdminBase
                 }
             }
             $sms_handle = with(new \Ecjia\App\Sms\SmsPlugin)->channel($channel_code);
-            $channel_info['channel_config'] = $sms_handle->makeFormData($code_list);
+            $channel_config = $sms_handle->makeFormData($code_list);
         }
+        catch (InvalidArgumentException $exception) {
+            $gourl = RC_Uri::url("sms/admin_plugin/delete", [
+                'code' => $channel_info['channel_code'],
+                'from' => 'edit',
+            ]);
+            $msg = sprintf(__('<strong>温馨提示：</strong>该短信插件已经丢失，请确认插件文件已经放入"/content/plugins/"下，
+                如需继续，请点击<a class="switch" href="javascript:;" data-url="%s">删除</a>，然后重新安装该插件。', 'sms'), $gourl);
+            ecjia_screen::get_current_screen()->add_admin_notice(new admin_notice($msg, 'alert-error'));
+        }
+
+        $channel_info['channel_config'] = $channel_config;
+
         $this->assign('channel', $channel_info);
 
         return $this->display('sms_channel_edit.dwt');
+    }
+
+    /**
+     * 删除插件配置
+     */
+    public function delete()
+    {
+        $code = $this->request->input('code');
+
+        $result = RC_Api::api('system', 'ecjia_deactivate_plugin', ['code' => $code]);
+
+        (new PluginUninstaller($code, new SmsPluginStorage()))->uninstall();
+
+        return $this->showmessage(__('删除成功', 'sms'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('sms/admin_plugin/init')));
     }
 
     /**
