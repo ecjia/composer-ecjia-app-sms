@@ -159,7 +159,7 @@ class AdminPluginController extends AdminBase
         }
         catch (InvalidArgumentException $exception) {
             $gourl = RC_Uri::url("sms/admin_plugin/delete", [
-                'code' => $channel_info['channel_code'],
+                'code' => $channel_code,
                 'from' => 'edit',
             ]);
             $msg = sprintf(__('<strong>温馨提示：</strong>该短信插件已经丢失，请确认插件文件已经放入"/content/plugins/"下，
