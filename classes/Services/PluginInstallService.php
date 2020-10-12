@@ -46,6 +46,7 @@
 //
 namespace Ecjia\App\Sms\Services;
 
+use Ecjia\App\Sms\Installer\PluginInstaller;
 use ecjia_admin;
 use ecjia_config;
 use ecjia_plugin;
@@ -57,7 +58,7 @@ use RC_Uri;
 
 /**
  * 移动应用首页模块设置
- * @author 
+ * @author
  */
 class PluginInstallService
 {
@@ -66,73 +67,24 @@ class PluginInstallService
      * @param $options
      * @return array|bool
      */
-    public function handle(& $options)
+    public function handle(&$options)
     {
-        if (isset($options['file'])) {
-            $plugin_file = $options['file'];
-            $plugin_data = RC_Plugin::get_plugin_data($plugin_file);
-
-            $plugin_file = RC_Plugin::plugin_basename($plugin_file);
-            $plugin_dir  = dirname($plugin_file);
-
-            $plugins              = ecjia_config::instance()->get_addon_config('sms_plugins', true);
-            $plugins[$plugin_dir] = $plugin_file;
-
-            ecjia_config::instance()->set_addon_config('sms_plugins', $plugins, true);
+        if (! (isset($options['file']) && isset($options['config']))) {
+            return ecjia_plugin::add_error('plugin_install_error', __('插件安装卸载必要参数不全', 'payment'));
         }
 
-        if (isset($options['config']) && !empty($plugin_data['Name'])) {
-            $format_name        = $plugin_data['Name'];
-            $format_description = $plugin_data['Description'];
+        $installer = new PluginInstaller($options['file'], $options['config']);
 
-            /* 检查输入 */
-            if (empty($format_name) || empty($options['config']['sms_code'])) {
-                return ecjia_plugin::add_error('plugin_install_error', __('短信插件名称不能为空', 'sms'));
-            }
+        $result = $installer->install();
 
-            /* 检测名称重复 */
-            $name_count = RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_name', $format_name)->where('channel_code', $options['config']['sms_code'])->count();
-            if ($name_count > 0) {
-                return ecjia_plugin::add_error('plugin_install_error', __('安装的插件已存在', 'sms'));
-            }
-
-            /* 取得配置信息 */
-            $config      = serialize($options['config']['forms']);
-            $config_file = $options['config'];
-
-            //组织默认数据，将该短信的信息添加到数据库
-            /* 安装，检查该短信插件是否曾经安装过 */
-            $count = RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_code', $options['config']['sms_code'])->count();
-
-            if ($count > 0) {
-                /* 该短信插件已经安装过, 将该短信插件的状态设置为 enable */
-                $data = array(
-                    'channel_type'   => 'sms',
-                    'channel_code'   => $options['config']['sms_code'],
-                    'channel_name'   => $format_name,
-                    'channel_desc'   => $format_description,
-                    'channel_config' => $config,
-                    'enabled'        => 1,
-                );
-
-                RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_code', $options['config']['sms_code'])->update($data);
-            } else {
-                /* 该短信插件没有安装过, 将该短信插件的信息添加到数据库 */
-                $data = array(
-                    'channel_type'   => 'sms',
-                    'channel_code'   => $options['config']['sms_code'],
-                    'channel_name'   => $format_name,
-                    'channel_desc'   => $format_description,
-                    'channel_config' => $config,
-                    'enabled'        => 1,
-                );
-                RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->insert($data);
-            }
-
-            /* 记录日志 */
-            ecjia_admin::admin_log($format_name, 'install', 'sms');
-            return true;
+        if (is_ecjia_error($result)) {
+            return $result;
         }
+
+        /* 记录日志 */
+        ecjia_admin::admin_log($installer->getConfigByKey('sms_code'), 'install', 'sms');
+
+        return true;
     }
 }
 

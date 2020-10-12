@@ -46,18 +46,13 @@
 //
 namespace Ecjia\App\Sms\Services;
 
+use Ecjia\App\Sms\Installer\PluginInstaller;
 use ecjia_admin;
-use ecjia_config;
 use ecjia_plugin;
-use RC_DB;
-use RC_Hook;
-use RC_Lang;
-use RC_Plugin;
-use RC_Uri;
 
 /**
  * 移动应用首页模块设置
- * @author 
+ * @author
  */
 class PluginUninstallService
 {
@@ -68,36 +63,22 @@ class PluginUninstallService
      */
     public function handle(& $options)
     {
-        $plugin_data = array();
-        if (isset($options['file'])) {
-            $plugin_file = $options['file'];
-            $plugin_data = RC_Plugin::get_plugin_data($plugin_file);
-
-            $plugin_file = RC_Plugin::plugin_basename($plugin_file);
-            $plugin_dir  = dirname($plugin_file);
-
-            $plugins = ecjia_config::instance()->get_addon_config('sms_plugins', true, true);
-            unset($plugins[$plugin_dir]);
-
-            ecjia_config::instance()->set_addon_config('sms_plugins', $plugins, true, true);
+        if (! (isset($options['file']) && isset($options['config']))) {
+            return ecjia_plugin::add_error('plugin_uninstall_error', __('插件安装卸载必要参数不全', 'payment'));
         }
 
-        if (isset($options['config']) && !empty($plugin_data['Name'])) {
-            $format_name = $plugin_data['Name'];
+        $installer = new PluginInstaller($options['file'], $options['config']);
 
-            /* 检查输入 */
-            if (empty($format_name) || empty($options['config']['sms_code'])) {
-                return ecjia_plugin::add_error('plugin_uninstall_error', __('短信插件名称不能为空', 'sms'));
-            }
+        $result = $installer->uninstall();
 
-            /* 从数据库中删除短信插件 */
-            RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_code', $options['config']['sms_code'])->delete();
-
-            /* 记录日志 */
-            ecjia_admin::admin_log($format_name, 'uninstall', 'sms');
-
-            return true;
+        if (is_ecjia_error($result)) {
+            return $result;
         }
+
+        /* 记录日志 */
+        ecjia_admin::admin_log($installer->getConfigByKey('sms_code'), 'uninstall', 'sms');
+
+        return true;
     }
 }
 
