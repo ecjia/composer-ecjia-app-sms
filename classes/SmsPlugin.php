@@ -48,6 +48,7 @@
 namespace Ecjia\App\Sms;
 
 use Ecjia\Component\Plugin\PluginModel;
+use Ecjia\Component\Plugin\Storages\SmsPluginStorage;
 use ecjia_config;
 use ecjia_error;
 
@@ -68,7 +69,7 @@ class SmsPlugin extends PluginModel
      */
     public function getInstalledPlugins()
     {
-        return ecjia_config::getAddonConfig('sms_plugins', true);
+        return (new SmsPluginStorage())->getPlugins();
     }
     
     /**
