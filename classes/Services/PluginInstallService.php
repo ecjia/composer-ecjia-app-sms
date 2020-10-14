@@ -48,13 +48,7 @@ namespace Ecjia\App\Sms\Services;
 
 use Ecjia\App\Sms\Installer\PluginInstaller;
 use ecjia_admin;
-use ecjia_config;
 use ecjia_plugin;
-use RC_DB;
-use RC_Hook;
-use RC_Lang;
-use RC_Plugin;
-use RC_Uri;
 
 /**
  * 移动应用首页模块设置
