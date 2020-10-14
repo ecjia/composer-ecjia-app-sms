@@ -64,7 +64,7 @@ class PluginInstallService
     public function handle(&$options)
     {
         if (! (isset($options['file']) && isset($options['config']))) {
-            return ecjia_plugin::add_error('plugin_install_error', __('插件安装卸载必要参数不全', 'payment'));
+            return ecjia_plugin::add_error('plugin_install_error', __('插件安装卸载必要参数不全', 'sms'));
         }
 
         $installer = new PluginInstaller($options['file'], $options['config']);
