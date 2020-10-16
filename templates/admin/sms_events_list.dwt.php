@@ -25,9 +25,9 @@
            	  	<div class="pull-right">
 	                <a class="change_status" style="cursor: pointer;"  data-msg='{if $val.status eq 'open'}{t domain="sms"}您确定要关闭该短信事件吗？{/t}{else}{t domain="sms"}您确定要开启该短信事件吗？{/t}{/if}' data-href='{if $val.status eq "open"}{url path="sms/admin_events/close" args="code={$val.code}&id={$val.id}"}{else}{url path="sms/admin_events/open" args="code={$val.code}&id={$val.id}"}{/if}' >
                        {if $val.status eq 'open'}
-                       <button class="btn" type="button" style="margin-top: 20px;">{t domain="sms"}点击关闭{/t}</button>
+                       <button class="btn btn-mini btn-success" type="button" style="margin-top: 20px;">{t domain="sms"}点击关闭{/t}</button>
                        {else}
-                       <button class="btn btn-gebo" type="button" style="margin-top: 20px;">{t domain="sms"}点击开启{/t}</button>
+                       <button class="btn  btn-mini" type="button" style="margin-top: 20px;">{t domain="sms"}点击开启{/t}</button>
                        {/if}
 	                </a>        
                 </div>
