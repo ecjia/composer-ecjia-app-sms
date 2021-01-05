@@ -360,7 +360,7 @@ class AdminPluginController extends AdminBase
         $count = $db_channel->count();
         $page  = new ecjia_page($count, 10, 5);
 
-        $data = $db_channel->take(10)->skip($page->start_id - 1)->orderBy('sort_order', 'asc')->get();
+        $data = $db_channel->take(10)->skip($page->start_id - 1)->orderBy('sort_order', 'asc')->get()->toArray();
         return array('item' => $data, 'page' => $page->show(2), 'desc' => $page->page_desc());
     }
 

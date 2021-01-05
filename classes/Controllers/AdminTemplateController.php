@@ -105,7 +105,11 @@ class AdminTemplateController extends AdminBase
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('短信模板', 'sms')));
         $this->assign('ur_here', __('短信模板列表', 'sms'));
 
-        $data = RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_type', 'sms')->orderby('sort_order', 'asc')->get();
+        $data = RC_DB::connection(config('cashier.database_connection', 'default'))
+                    ->table('notification_channels')
+                    ->where('channel_type', 'sms')
+                    ->orderby('sort_order', 'asc')
+                    ->get()->toArray();
         $this->assign('data', $data);
 
         $channel_code = $_GET['channel_code'];
@@ -120,7 +124,7 @@ class AdminTemplateController extends AdminBase
             ->where('channel_type', 'sms')
             ->where('channel_code', $channel_code)
             ->orderby('id', 'desc')
-            ->get();
+            ->get()->toArray();
 
         $this->assign('action_link', array('href' => RC_Uri::url('sms/admin_template/add', array('channel_code' => $channel_code)), 'text' => __('添加短信模板', 'sms')));
         $this->assign('action_link_event', array('href' => RC_Uri::url('sms/admin_events/init'), 'text' => __('短信事件列表', 'sms')));
@@ -151,7 +155,11 @@ class AdminTemplateController extends AdminBase
         $this->assign('action_link', array('href' => RC_Uri::url('sms/admin_template/init', array('channel_code' => $_GET['channel_code'])), 'text' => __('短信模板列表', 'sms')));
 
         $template_code_list = $this->template_code_list();
-        $existed            = RC_DB::connection('ecjia')->table('notification_templates')->where('channel_code', $_GET['channel_code'])->select('template_code', 'template_subject')->get();
+        $existed            = RC_DB::connection('ecjia')
+                                    ->table('notification_templates')
+                                    ->where('channel_code', $_GET['channel_code'])
+                                    ->select('template_code', 'template_subject')
+                                    ->get()->toArray();
         if (!empty($existed)) {
             foreach ($existed as $value) {
                 $existed_list[$value['template_code']] = $value['template_subject'] . ' [' . $value['template_code'] . ']';
@@ -268,7 +276,12 @@ class AdminTemplateController extends AdminBase
         $this->assign('action_link', array('href' => RC_Uri::url('sms/admin_template/init', array('channel_code' => $_GET['channel_code'])), 'text' => __('短信模板列表', 'sms')));
 
         $template_code_list = $this->template_code_list();
-        $existed            = RC_DB::connection('ecjia')->table('notification_templates')->where('channel_code', $_GET['channel_code'])->where('template_code', '!=', $_GET['event_code'])->select('template_code', 'template_subject')->get();
+        $existed            = RC_DB::connection('ecjia')
+                                ->table('notification_templates')
+                                ->where('channel_code', $_GET['channel_code'])
+                                ->where('template_code', '!=', $_GET['event_code'])
+                                ->select('template_code', 'template_subject')
+                                ->get()->toArray();
         if (!empty($existed)) {
             foreach ($existed as $value) {
                 $existed_list[$value['template_code']] = $value['template_subject'] . ' [' . $value['template_code'] . ']';

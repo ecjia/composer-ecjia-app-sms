@@ -107,7 +107,7 @@ class AdminEventsController extends AdminBase
         $database = RC_DB::connection('ecjia')->table('notification_events')
             ->where('channel_type', 'sms')
             ->select('id', 'event_code', 'status')
-            ->get();
+            ->get()->toArray();
         foreach ($database as $key => $val) {
             $database[$val['event_code']] = $val;
             unset($database[$key]);

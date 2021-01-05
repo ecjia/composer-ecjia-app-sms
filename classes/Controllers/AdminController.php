@@ -222,7 +222,12 @@ class AdminController extends AdminBase
     	$count = $db_sms_sendlist->count();
     	$page = new ecjia_page($count, 15, 6);
     	 
-    	$row = $db_sms_sendlist->select('*')->orderby('last_send', 'desc')->take(15)->skip($page->start_id-1)->get();
+    	$row = $db_sms_sendlist
+                ->select('*')
+                ->orderby('last_send', 'desc')
+                ->take(15)
+                ->skip($page->start_id-1)
+                ->get()->toArray();
     
     	if (!empty($row)) {
     		foreach ($row AS $key => $val) {
