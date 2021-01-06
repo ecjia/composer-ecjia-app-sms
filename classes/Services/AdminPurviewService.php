@@ -47,7 +47,6 @@
 
 namespace Ecjia\App\Sms\Services;
 
-use RC_Lang;
 
 /**
  * 首页模块可视化权限

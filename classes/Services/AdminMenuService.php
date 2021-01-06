@@ -48,7 +48,6 @@ namespace Ecjia\App\Sms\Services;
 
 use ecjia_admin;
 use RC_Hook;
-use RC_Lang;
 use RC_Uri;
 
 /**

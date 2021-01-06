@@ -46,6 +46,9 @@
 //
 namespace Ecjia\App\Sms\Services;
 
+use Ecjia\App\Sms\EventFactory\EventFactory;
+use Ecjia\App\Sms\Models\SmsTemplateModel;
+use Ecjia\App\Sms\SmsManager;
 use ecjia_error;
 
 /**
@@ -77,13 +80,13 @@ class SendEventSmsService
 
         $channel = array_get($options, 'channel', null);
 
-        $eventHandler = with(new \Ecjia\App\Sms\EventFactory())->event($event);
+        $eventHandler = with(new EventFactory())->event($event);
         if (!$eventHandler->hasEnabled()) {
             return new ecjia_error('event_not_open', __(sprintf('请先开启短信%s事件', $eventHandler->getName()), 'sms'));
         }
 
-        $result = \Ecjia\App\Sms\SmsManager::make()
-            ->setTemplateModel(new \Ecjia\App\Sms\Models\SmsTemplateModel())
+        $result = SmsManager::make()
+            ->setTemplateModel(new SmsTemplateModel())
             ->setEvent($eventHandler)
             ->setChannel($channel)
             ->setAreaCode($area_code)
