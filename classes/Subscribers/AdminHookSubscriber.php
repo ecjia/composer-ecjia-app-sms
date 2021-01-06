@@ -4,7 +4,6 @@
 namespace Ecjia\App\Sms\Subscribers;
 
 use ecjia_admin;
-use RC_Hook;
 use RC_Uri;
 use Royalcms\Component\Hook\Dispatcher;
 
