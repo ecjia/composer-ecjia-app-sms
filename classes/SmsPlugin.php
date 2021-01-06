@@ -49,7 +49,6 @@ namespace Ecjia\App\Sms;
 
 use Ecjia\Component\Plugin\PluginModel;
 use Ecjia\Component\Plugin\Storages\SmsPluginStorage;
-use ecjia_config;
 use ecjia_error;
 
 class SmsPlugin extends PluginModel
