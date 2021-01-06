@@ -50,6 +50,8 @@ use admin_nav_here;
 use admin_notice;
 use ecjia;
 use Ecjia\App\Sms\Installer\PluginUninstaller;
+use Ecjia\App\Sms\SmsManager;
+use Ecjia\App\Sms\SmsPlugin;
 use Ecjia\Component\Plugin\Storages\SmsPluginStorage;
 use ecjia_admin;
 use ecjia_page;
@@ -113,9 +115,9 @@ class AdminPluginController extends AdminBase
 
         $channel = trim($_GET['code']);
 
-        $handle = with(new \Ecjia\App\Sms\SmsPlugin)->channel($channel);
+        $handle = with(new SmsPlugin)->channel($channel);
         if ($handle->checkBalance()) {
-            $result = \Ecjia\App\Sms\SmsManager::make()->balance($channel);
+            $result = SmsManager::make()->balance($channel);
             if (is_ecjia_error($result)) {
                 return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             } else {
@@ -154,7 +156,7 @@ class AdminPluginController extends AdminBase
                     $code_list[$value['name']] = $value['value'];
                 }
             }
-            $sms_handle = with(new \Ecjia\App\Sms\SmsPlugin)->channel($channel_code);
+            $sms_handle = with(new SmsPlugin)->channel($channel_code);
             $channel_config = $sms_handle->makeFormData($code_list);
         }
         catch (InvalidArgumentException $exception) {

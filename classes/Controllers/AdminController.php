@@ -48,6 +48,7 @@ namespace Ecjia\App\Sms\Controllers;
 
 use admin_nav_here;
 use ecjia;
+use Ecjia\App\Sms\SmsManager;
 use ecjia_admin;
 use ecjia_page;
 use ecjia_screen;
@@ -128,7 +129,7 @@ class AdminController extends AdminBase
         $this->admin_priv('sms_history_manage');
 
         $smsid  = intval($_GET['id']);
-        $result = \Ecjia\App\Sms\SmsManager::make()->resend($smsid);
+        $result = SmsManager::make()->resend($smsid);
         ecjia_admin::admin_log(sprintf(__('短信编号为%s的再次进行发送短信 ', 'sms'), $smsid), 'setup', 'sms_record');
 
         if (is_ecjia_error($result)) {
@@ -148,7 +149,7 @@ class AdminController extends AdminBase
         $smsids = explode(",", $_POST['sms_id']);
 
         foreach ($smsids as $value) {
-            $result = \Ecjia\App\Sms\SmsManager::make()->resend($value);
+            $result = SmsManager::make()->resend($value);
         }
 
         if (is_ecjia_error($result)) {

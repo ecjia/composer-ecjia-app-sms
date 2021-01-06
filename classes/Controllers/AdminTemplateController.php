@@ -48,6 +48,8 @@ namespace Ecjia\App\Sms\Controllers;
 
 use admin_nav_here;
 use ecjia;
+use Ecjia\App\Sms\EventFactory\EventFactory;
+use Ecjia\App\Sms\SmsPlugin;
 use ecjia_admin;
 use ecjia_screen;
 use RC_Api;
@@ -173,7 +175,7 @@ class AdminTemplateController extends AdminBase
         $channel_code = trim($_GET['channel_code']);
         $this->assign('channel_code', $channel_code);
 
-        $handle = with(new \Ecjia\App\Sms\SmsPlugin)->channel($channel_code);
+        $handle = with(new SmsPlugin)->channel($channel_code);
         if ($handle->requiredTemplateId()) {
             $this->assign('templateid', 'templateid');
         }
@@ -193,7 +195,7 @@ class AdminTemplateController extends AdminBase
         $filter       = $_POST['JSON'];
         $code         = trim($filter['code']);
         $channel_code = trim($filter['channel_code']);
-        $event        = with(new \Ecjia\App\Sms\EventFactory)->event($code);
+        $event        = with(new EventFactory)->event($code);
 
         $desc        = [];
         $getValueHit = $event->getValueHit();
@@ -299,7 +301,7 @@ class AdminTemplateController extends AdminBase
         $channel_code = trim($_GET['channel_code']);
         $this->assign('channel_code', $channel_code);
 
-        $handle = with(new \Ecjia\App\Sms\SmsPlugin)->channel($channel_code);
+        $handle = with(new SmsPlugin)->channel($channel_code);
         if ($handle->requiredTemplateId()) {
             $this->assign('templateid', 'templateid');
         }
@@ -308,7 +310,7 @@ class AdminTemplateController extends AdminBase
         }
 
         $event_code = trim($_GET['event_code']);
-        $event      = with(new \Ecjia\App\Sms\EventFactory)->event($event_code);
+        $event      = with(new EventFactory)->event($event_code);
 
         $desc        = [];
         $getValueHit = $event->getValueHit();
@@ -441,7 +443,7 @@ class AdminTemplateController extends AdminBase
 
         $template_code_list = array();
 
-        $factory = new \Ecjia\App\Sms\EventFactory();
+        $factory = new EventFactory();
 
         $events = $factory->getEvents();
         foreach ($events as $event) {

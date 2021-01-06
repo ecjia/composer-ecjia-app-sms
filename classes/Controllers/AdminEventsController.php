@@ -48,6 +48,7 @@ namespace Ecjia\App\Sms\Controllers;
 
 use admin_nav_here;
 use ecjia;
+use Ecjia\App\Sms\EventFactory\EventFactory;
 use ecjia_admin;
 use ecjia_screen;
 use RC_App;
@@ -156,7 +157,7 @@ class AdminEventsController extends AdminBase
 
         $template_code_list = array();
 
-        $factory = new \Ecjia\App\Sms\EventFactory();
+        $factory = new EventFactory();
         $events  = $factory->getEvents();
         foreach ($events as $k => $event) {
             $template_code_list[$k]['code']        = $event->getCode();
