@@ -173,7 +173,7 @@ class AdminController extends AdminBase
     	$filter['end_date']   = $end_date;
     	$filter['errorval']   = empty($_GET['errorval']) ? 0 : intval($_GET['errorval']);
     	 
-    	$db_sms_sendlist = RC_DB::connection(config('cashier.database_connection', 'default'))->table('sms_sendlist');
+    	$db_sms_sendlist = RC_DB::connection(config('ecjia.database_connection', 'default'))->table('sms_sendlist');
     	 
     	if ($filter['keywords']) {
     		$db_sms_sendlist->where(function($query) use ($keywords) {
@@ -233,7 +233,7 @@ class AdminController extends AdminBase
     	if (!empty($row)) {
     		foreach ($row AS $key => $val) {
     			$row[$key]['last_send'] = RC_Time::local_date(ecjia::config('time_format'), $val['last_send']);
-    			$row[$key]['channel_name'] = RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_code', $val['channel_code'])->value('channel_name');
+    			$row[$key]['channel_name'] = RC_DB::connection(config('ecjia.database_connection', 'default'))->table('notification_channels')->where('channel_code', $val['channel_code'])->value('channel_name');
     		}
     	}
     

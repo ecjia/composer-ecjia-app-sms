@@ -73,7 +73,7 @@ class SmsTemplateService
             return false;
         }
 
-        $tpl = RC_DB::connection(config('cashier.database_connection', 'default'))->table('mail_templates')->where('template_code', $tpl_name)->first();
+        $tpl = RC_DB::connection(config('ecjia.database_connection', 'default'))->table('mail_templates')->where('template_code', $tpl_name)->first();
         $tpl['template_content'] = '{nocache}' . $tpl['template_content'] . '{/nocache}';
 
         return $tpl;

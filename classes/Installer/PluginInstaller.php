@@ -39,7 +39,7 @@ class PluginInstaller extends \Ecjia\Component\Plugin\Installer\PluginInstaller
         $format_name        = $this->getPluginDataByKey('Name');
         $format_description = $this->getPluginDataByKey('Description');
 
-        $data = RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_type', 'sms')->where('channel_code', $code)->count();
+        $data = RC_DB::connection(config('ecjia.database_connection', 'default'))->table('notification_channels')->where('channel_type', 'sms')->where('channel_code', $code)->count();
 
         if (!$data) {
             /* 取得配置信息 */
@@ -47,7 +47,7 @@ class PluginInstaller extends \Ecjia\Component\Plugin\Installer\PluginInstaller
 
             //组织默认数据，将该短信的信息添加到数据库
             /* 安装，检查该短信插件是否曾经安装过 */
-            $count = RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_type', 'sms')->where('channel_code', $code)->count();
+            $count = RC_DB::connection(config('ecjia.database_connection', 'default'))->table('notification_channels')->where('channel_type', 'sms')->where('channel_code', $code)->count();
 
             if ($count > 0) {
                 /* 该短信插件已经安装过, 将该短信插件的状态设置为 enable */
@@ -60,7 +60,7 @@ class PluginInstaller extends \Ecjia\Component\Plugin\Installer\PluginInstaller
                     'enabled'        => 1,
                 );
 
-                RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->where('channel_type', 'sms')->where('channel_code', $code)->update($data);
+                RC_DB::connection(config('ecjia.database_connection', 'default'))->table('notification_channels')->where('channel_type', 'sms')->where('channel_code', $code)->update($data);
             } else {
                 /* 该短信插件没有安装过, 将该短信插件的信息添加到数据库 */
                 $data = array(
@@ -71,7 +71,7 @@ class PluginInstaller extends \Ecjia\Component\Plugin\Installer\PluginInstaller
                     'channel_config' => $config,
                     'enabled'        => 1,
                 );
-                RC_DB::connection(config('cashier.database_connection', 'default'))->table('notification_channels')->insert($data);
+                RC_DB::connection(config('ecjia.database_connection', 'default'))->table('notification_channels')->insert($data);
             }
         }
     }
