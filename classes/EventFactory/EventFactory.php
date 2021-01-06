@@ -45,73 +45,58 @@
 //  ---------------------------------------------------------------------------------
 //
 
-namespace Ecjia\App\Sms;
+namespace Ecjia\App\Sms\EventFactory;
 
-use RC_Hook;
-use RC_Cache;
-use InvalidArgumentException;
 
-class EventFactory
+class EventFactory extends \Ecjia\Component\ComponentFactory\ComponentFactory
 {
 
-    protected static $factories;
-    
-    public function __construct()
+    /**
+     * ComponentFactory constructor.
+     *
+     * @param ComponentNamespace|null $component_namespace
+     */
+	public function __construct(ComponentNamespace $component_namespace = null)
+	{
+		if (is_null($component_namespace)) {
+			$component_namespace = new ComponentNamespace();
+		}
+	
+		parent::__construct($component_namespace);
+	}
+
+    /**
+     * 缓存key
+     *
+     * @return  string
+     */
+    public function getCacheKey()
     {
-        self::$factories = $this->getFactories();
+        return 'sms_event_factories';
     }
 
-    public function getFactories()
+    /**
+     * @return \Ecjia\Component\Cache\Cache
+     */
+    public function getCacheInstance()
     {
-        $cache_key = 'sms_event_factories';
-        
-        $factories = RC_Cache::app_cache_get($cache_key, 'sms');
-        
-        if (empty($factories)) {
-            
-            $dir = __DIR__ . '/Events';
-            
-            $events = royalcms('files')->files($dir);
-        
-            $factories = [];
-            
-            foreach ($events as $key => $value) {
-                $value = str_replace($dir . DIRECTORY_SEPARATOR, '', $value);
-                $value = str_replace('.php', '', $value);
-                $className = __NAMESPACE__ . '\Events\\' . $value;
-                
-                $key = with(new $className)->getCode();
-                $factories[$key] = $className;
-            }
-
-            RC_Cache::app_cache_set($cache_key, $factories, 'sms', 10080);
-        }
-
-        return RC_Hook::apply_filters('ecjia_sms_event_filter', $factories);
+        return ecjia_cache('sms');
     }
-    
+
+    public function getHookTag()
+    {
+        return 'ecjia_sms_event_filter';
+    }
     
     public function getEvents()
     {
-        $events = [];
-        
-        foreach (self::$factories as $key => $value) {
-            $events[$key] = new $value;
-        }
-
-        return $events;
+        return $this->getComponents();
     }
     
     
     public function event($code)
     {
-        if (!array_key_exists($code, self::$factories)) {
-            throw new InvalidArgumentException("Event '$code' is not supported.");
-        }
-    
-        $className = self::$factories[$code];
-    
-        return new $className();
+        return $this->component($code);
     }
     
     

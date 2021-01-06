@@ -45,24 +45,16 @@
 //  ---------------------------------------------------------------------------------
 //
 
-namespace Ecjia\App\Sms;
+namespace Ecjia\App\Sms\EventFactory;
 
-abstract class EventAbstract
+use Ecjia\App\Sms\Models\SmsEventModel;
+
+abstract class EventAbstract extends \Ecjia\Component\ComponentFactory\ComponentAbstract
 {
-    public function getCode()
-    {
-        return $this->code;
-    }
     
-    public function getName()
-    {
-        return $this->name;
-    }
+    protected $template;
     
-    public function getDescription()
-    {
-        return $this->description;
-    }
+    protected $available_values = [];
     
     public function getTemplate()
     {
@@ -86,7 +78,7 @@ abstract class EventAbstract
     
     public function hasEnabled()
     {
-        $model = new \Ecjia\App\Sms\Models\SmsEventModel();
+        $model = new SmsEventModel();
         
         $event = $model->getEventByCode($this->code);
         if ($event->status == 'open') 
