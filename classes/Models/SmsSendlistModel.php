@@ -51,6 +51,8 @@ use Royalcms\Component\Database\Eloquent\Model;
 
 class SmsSendlistModel extends Model
 {
+    protected $connection = 'ecjia';
+
     protected $table = 'sms_sendlist';
     
     protected $primaryKey = 'id';
