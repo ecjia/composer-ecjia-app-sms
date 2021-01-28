@@ -49,12 +49,27 @@ namespace Ecjia\App\Sms\Models;
 
 use Royalcms\Component\Database\Eloquent\Model;
 
+/**
+ * Class SmsTemplateModel
+ * @package Ecjia\App\Sms\Models
+ *
+ * @method \Royalcms\Component\Database\Eloquent\Builder sms()
+ * @method \Royalcms\Component\Database\Eloquent\Builder plugin($code)
+ */
 class SmsTemplateModel extends Model
 {
-	protected $connection = 'ecjia';
-	
     protected $table = 'notification_templates';
-    
+
+    /**
+     * AttributeModel constructor.
+     * @param array $attributes
+     */
+    public function __construct(array $attributes = [])
+    {
+        $this->connection = config('ecjia.database_connection', 'default');
+
+        parent::__construct($attributes);
+    }
     
     /**
      * 限制查询只包括短信模板。
