@@ -56,12 +56,12 @@ class SmsTemplateService
 {
 
     /**
-     * @param $options[array]
+     * @param $options [array]
      *          $options['tpl_name'] 模板代码
      *
      * @return string | bool
      */
-    public function handle(& $options)
+    public function handle($options)
     {
         if (is_string($options)) {
             $tpl_name = $options;
@@ -73,7 +73,7 @@ class SmsTemplateService
             return false;
         }
 
-        $tpl = RC_DB::connection(config('ecjia.database_connection', 'default'))->table('mail_templates')->where('template_code', $tpl_name)->first();
+        $tpl                     = RC_DB::connection(config('ecjia.database_connection', 'default'))->table('mail_templates')->where('template_code', $tpl_name)->first();
         $tpl['template_content'] = '{nocache}' . $tpl['template_content'] . '{/nocache}';
 
         return $tpl;

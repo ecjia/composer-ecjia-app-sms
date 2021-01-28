@@ -53,22 +53,22 @@ namespace Ecjia\App\Sms\Services;
  */
 class AdminPurviewService
 {
-    public function handle(& $options)
+    public function handle($options)
     {
         $purviews = array(
-            array('action_name' => __('短信发送管理', 'sms'), 	'action_code' => 'sms_send_manage', 	'relevance' => ''),
-            array('action_name' => __('短信历史记录管理', 'sms'), 'action_code' => 'sms_history_manage', 	'relevance' => ''),
-            array('action_name' => __('短信模板管理', 'sms'),'action_code' => 'sms_template_manage', 'relevance' => ''),
-            array('action_name' => __('短信模板更新', 'sms'),'action_code' => 'sms_template_update', 'relevance' => ''),
-            array('action_name' => __('短信模板删除', 'sms'),'action_code' => 'sms_template_delete', 'relevance' => ''),
+            array('action_name' => __('短信发送管理', 'sms'), 'action_code' => 'sms_send_manage', 'relevance' => ''),
+            array('action_name' => __('短信历史记录管理', 'sms'), 'action_code' => 'sms_history_manage', 'relevance' => ''),
+            array('action_name' => __('短信模板管理', 'sms'), 'action_code' => 'sms_template_manage', 'relevance' => ''),
+            array('action_name' => __('短信模板更新', 'sms'), 'action_code' => 'sms_template_update', 'relevance' => ''),
+            array('action_name' => __('短信模板删除', 'sms'), 'action_code' => 'sms_template_delete', 'relevance' => ''),
 
-            array('action_name' => __('短信配置管理', 'sms'), 	'action_code' => 'sms_config_manage', 	'relevance' => ''),
-            array('action_name' => __('更新短信配置', 'sms'), 	'action_code' => 'sms_config_update', 	'relevance' => ''),
+            array('action_name' => __('短信配置管理', 'sms'), 'action_code' => 'sms_config_manage', 'relevance' => ''),
+            array('action_name' => __('更新短信配置', 'sms'), 'action_code' => 'sms_config_update', 'relevance' => ''),
 
-            array('action_name' => __('短信事件管理', 'sms'), 	'action_code' => 'sms_events_manage', 	'relevance' => ''),
+            array('action_name' => __('短信事件管理', 'sms'), 'action_code' => 'sms_events_manage', 'relevance' => ''),
 
-            array('action_name' => __('短信渠道管理', 'sms'), 	'action_code' => 'sms_channel_manage', 	'relevance' => ''),
-            array('action_name' => __('短信渠道更新', 'sms'), 	'action_code' => 'sms_channel_update', 	'relevance' => ''),
+            array('action_name' => __('短信渠道管理', 'sms'), 'action_code' => 'sms_channel_manage', 'relevance' => ''),
+            array('action_name' => __('短信渠道更新', 'sms'), 'action_code' => 'sms_channel_update', 'relevance' => ''),
 
         );
 

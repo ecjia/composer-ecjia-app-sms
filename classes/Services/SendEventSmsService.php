@@ -65,7 +65,7 @@ class SendEventSmsService
      * @param $channel  string  短信渠道code，选填
      * @return boolean | ecjia_error
      */
-    public function handle(& $options)
+    public function handle($options)
     {
         // $mobile, $event, $value
 
@@ -73,9 +73,9 @@ class SendEventSmsService
             return new ecjia_error('invalid_argument', __('无效参数', 'sms'));
         }
 
-        $mobile = $options['mobile'];
-        $event = $options['event'];
-        $value = $options['value'];
+        $mobile    = $options['mobile'];
+        $event     = $options['event'];
+        $value     = $options['value'];
         $area_code = $options['area_code'];
 
         $channel = array_get($options, 'channel', null);

@@ -52,7 +52,7 @@ use RC_Uri;
 
 /**
  * 移动应用首页模块设置
- * @author 
+ * @author
  */
 class PluginMenuService
 {
@@ -61,7 +61,7 @@ class PluginMenuService
      * @param $options
      * @return array|bool
      */
-    public function handle(& $options)
+    public function handle($options)
     {
         $menus = ecjia_admin::make_admin_menu('sms_list', __('短信渠道', 'sms'), RC_Uri::url('sms/admin_plugin/init'), 1)->add_purview('notification_manage')->add_base('sms');
 

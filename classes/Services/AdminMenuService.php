@@ -52,7 +52,7 @@ use RC_Uri;
 
 /**
  * 移动应用首页模块设置
- * @author 
+ * @author
  */
 class AdminMenuService
 {
@@ -61,7 +61,7 @@ class AdminMenuService
      * @param $options
      * @return array|bool
      */
-    public function handle(& $options)
+    public function handle($options)
     {
         $menus = ecjia_admin::make_admin_menu('10_sms_manage', __('短信管理', 'sms'), '', 10);
 
@@ -76,7 +76,7 @@ class AdminMenuService
 
         $menus = RC_Hook::apply_filters('sms_admin_menu_api', $menus);
 
-        if (! $menus->has_submenus()) {
+        if (!$menus->has_submenus()) {
             return false;
         }
 
