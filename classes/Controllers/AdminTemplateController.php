@@ -120,7 +120,7 @@ class AdminTemplateController extends AdminBase
         }
         $this->assign('channel_code', $channel_code);
 
-        $templatedb = RC_DB::connection('ecjia')->table('notification_templates');
+        $templatedb = RC_DB::connection(config('ecjia.database_connection', 'default'))->table('notification_templates');
         $template   = $templatedb
             ->select('id', 'template_code', 'template_subject', 'template_content')
             ->where('channel_type', 'sms')
@@ -157,7 +157,7 @@ class AdminTemplateController extends AdminBase
         $this->assign('action_link', array('href' => RC_Uri::url('sms/admin_template/init', array('channel_code' => $_GET['channel_code'])), 'text' => __('短信模板列表', 'sms')));
 
         $template_code_list = $this->template_code_list();
-        $existed            = RC_DB::connection('ecjia')
+        $existed            = RC_DB::connection(config('ecjia.database_connection', 'default'))
                                     ->table('notification_templates')
                                     ->where('channel_code', $_GET['channel_code'])
                                     ->select('template_code', 'template_subject')
@@ -230,7 +230,7 @@ class AdminTemplateController extends AdminBase
             return $this->showmessage(__('请选择短信事件', 'sms'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
-        $query = RC_DB::connection('ecjia')->table('notification_templates')->where('channel_type', 'sms')->where('channel_code', $channel_code)->where('template_code', $template_code)->count();
+        $query = RC_DB::connection(config('ecjia.database_connection', 'default'))->table('notification_templates')->where('channel_type', 'sms')->where('channel_code', $channel_code)->where('template_code', $template_code)->count();
         if ($query > 0) {
             return $this->showmessage(__('该短信模板代号在该渠道下已存在', 'sms'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
@@ -246,7 +246,7 @@ class AdminTemplateController extends AdminBase
             'channel_code'     => $channel_code,
             'sign_name'        => $sign_name,
         );
-        $id = RC_DB::connection('ecjia')->table('notification_templates')->insertGetId($data);
+        $id = RC_DB::connection(config('ecjia.database_connection', 'default'))->table('notification_templates')->insertGetId($data);
 
         ecjia_admin::admin_log(sprintf(__('短信模板名是 %s模板', 'sms'), $template_code) . '，' . sprintf(__('短信主题是 %s', 'sms'), $subject), 'add', 'sms_template');
 
@@ -278,7 +278,7 @@ class AdminTemplateController extends AdminBase
         $this->assign('action_link', array('href' => RC_Uri::url('sms/admin_template/init', array('channel_code' => $_GET['channel_code'])), 'text' => __('短信模板列表', 'sms')));
 
         $template_code_list = $this->template_code_list();
-        $existed            = RC_DB::connection('ecjia')
+        $existed            = RC_DB::connection(config('ecjia.database_connection', 'default'))
                                 ->table('notification_templates')
                                 ->where('channel_code', $_GET['channel_code'])
                                 ->where('template_code', '!=', $_GET['event_code'])
@@ -295,7 +295,7 @@ class AdminTemplateController extends AdminBase
         $this->assign('template_code_list', $template_code_list);
 
         $id   = intval($_GET['id']);
-        $data = RC_DB::connection('ecjia')->table('notification_templates')->where('id', $id)->first();
+        $data = RC_DB::connection(config('ecjia.database_connection', 'default'))->table('notification_templates')->where('id', $id)->first();
         $this->assign('data', $data);
 
         $channel_code = trim($_GET['channel_code']);
@@ -348,7 +348,7 @@ class AdminTemplateController extends AdminBase
             return $this->showmessage(__('请选择短信事件', 'sms'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
-        $query = RC_DB::connection('ecjia')->table('notification_templates')->where('channel_type', 'sms')->where('channel_code', $channel_code)->where('template_code', $template_code)->where('id', '!=', $id)->count();
+        $query = RC_DB::connection(config('ecjia.database_connection', 'default'))->table('notification_templates')->where('channel_type', 'sms')->where('channel_code', $channel_code)->where('template_code', $template_code)->where('id', '!=', $id)->count();
         if ($query > 0) {
             return $this->showmessage(__('该短信模板代号在该渠道下已存在', 'sms'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
@@ -360,7 +360,7 @@ class AdminTemplateController extends AdminBase
             'last_modify'      => RC_Time::gmtime(),
             'sign_name'        => $sign_name,
         );
-        RC_DB::connection('ecjia')->table('notification_templates')->where('id', $id)->update($data);
+        RC_DB::connection(config('ecjia.database_connection', 'default'))->table('notification_templates')->where('id', $id)->update($data);
 
         ecjia_admin::admin_log(sprintf(__('模板名是 %s，短信主题是 %s', 'sms'), $template_code, $subject), 'edit', 'sms_template');
         return $this->showmessage(__('编辑短信模板成功', 'sms'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('sms/admin_template/edit', array('id' => $id, 'channel_code' => $channel_code, 'event_code' => $template_code))));
@@ -380,7 +380,7 @@ class AdminTemplateController extends AdminBase
         $this->assign('channel_code', $channel_code);
 
         $id   = intval($_GET['id']);
-        $data = RC_DB::connection('ecjia')->table('notification_templates')->where('id', $id)->first();
+        $data = RC_DB::connection(config('ecjia.database_connection', 'default'))->table('notification_templates')->where('id', $id)->first();
 
         $template_content = $data['template_content'];
         preg_match_all("|{(.*)}|U", $template_content, $ok);
@@ -428,8 +428,8 @@ class AdminTemplateController extends AdminBase
 
         $id = intval($_GET['id']);
 
-        $info = RC_DB::connection('ecjia')->table('notification_templates')->where('id', $id)->select('template_subject')->first();
-        RC_DB::connection('ecjia')->table('notification_templates')->where('id', $id)->delete();
+        $info = RC_DB::connection(config('ecjia.database_connection', 'default'))->table('notification_templates')->where('id', $id)->select('template_subject')->first();
+        RC_DB::connection(config('ecjia.database_connection', 'default'))->table('notification_templates')->where('id', $id)->delete();
 
         ecjia_admin::admin_log(sprintf(__('模板名是 %s，短信主题是 %s', 'sms'), $info['template_subject']), 'remove', 'sms_template');
         return $this->showmessage(__('删除短信模板成功', 'sms'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('sms/admin_template/init', array('id' => $id, 'channel_code' => $_GET['channel_code']))));

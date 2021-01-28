@@ -105,7 +105,7 @@ class AdminEventsController extends AdminBase
         $this->assign('action_link', array('href' => RC_Uri::url('sms/admin_template/init'), 'text' => __('短信模板列表', 'sms')));
 
         $data     = $this->template_code_list();
-        $database = RC_DB::connection('ecjia')->table('notification_events')
+        $database = RC_DB::connection(config('ecjia.database_connection', 'default'))->table('notification_events')
             ->where('channel_type', 'sms')
             ->select('id', 'event_code', 'status')
             ->get()->toArray();
@@ -133,9 +133,9 @@ class AdminEventsController extends AdminBase
                 'status'       => 'open',
                 'channel_type' => 'sms',
             );
-            RC_DB::connection('ecjia')->table('notification_events')->insertGetId($data);
+            RC_DB::connection(config('ecjia.database_connection', 'default'))->table('notification_events')->insertGetId($data);
         } else {
-            RC_DB::connection('ecjia')->table('notification_events')->where('id', $_GET['id'])->update(array('status' => 'open'));
+            RC_DB::connection(config('ecjia.database_connection', 'default'))->table('notification_events')->where('id', $_GET['id'])->update(array('status' => 'open'));
         }
         ecjia_admin::admin_log($_GET['code'], 'add', 'sms_events');
         return $this->showmessage(__('开启成功', 'sms'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('sms/admin_events/init')));
@@ -144,7 +144,7 @@ class AdminEventsController extends AdminBase
     public function close()
     {
         $this->admin_priv('sms_events_manage');
-        RC_DB::connection('ecjia')->table('notification_events')->where('id', $_GET['id'])->update(array('status' => 'close'));
+        RC_DB::connection(config('ecjia.database_connection', 'default'))->table('notification_events')->where('id', $_GET['id'])->update(array('status' => 'close'));
         ecjia_admin::admin_log($_GET['code'], 'close', 'sms_events');
         return $this->showmessage(__('关闭成功', 'sms'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('sms/admin_events/init')));
     }
